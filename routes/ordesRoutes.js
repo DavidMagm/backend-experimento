@@ -1,17 +1,12 @@
 const express = require('express');
 const router = express.Router()
+const OrdesServices = require('../services/ordesServices');
+const service = new OrdesServices()
+
 
 router.get('/', (req, res) => {
-  res.json([
-    {
-      order: 1,
-      products: ['product 1', 'product 2']
-    },
-    {
-      order: 2,
-      products: ['product 1', 'product 2']
-    }
-  ])
+  const ordes = service.find()
+  res.json(ordes)
 });
 
 module.exports = router;

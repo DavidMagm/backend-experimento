@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router()
+const UsersServices = require('../services/usersServices')
+const service = new UsersServices()
 
 router.get('/:id', (req, res) => {
-  res.json({
-    name: 'David',
-    nickName: 'david00',
-    email: 'david@gmail.com'
-  })
+  const users = service.find()
+  res.json(users)
 });
 
 module.exports = router;

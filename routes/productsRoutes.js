@@ -1,60 +1,42 @@
 const express = require('express');
-const { faker } = require('@faker-js/faker');
 const router = express.Router()
+const ProductService = require('../services/productsServies.js');
+const service = new ProductService()
 
-router.get('/', (req, res) => {
-  const {size} = req.query
-  const products = []
-  const limit = size || 10;
-  for (let i = 0; i < limit; i++) {
-    products.push({
-      name: faker.commerce.productName(),
-      price: parseInt(faker.commerce.price(), 10),
-      image: faker.image.url()
-    });
-  }
+router.get('/', async (req, res) => {
+  const products = await service.find()
   res.json(products)
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body
-  res.status(201).json({
-    message: 'created',
-    data: body
-  })
+  const newProducts = await service.create(body)
+  res.status(201).json(newProducts)
 });
 
-router.patch('/:id', (req, res) => {
-  const {id} = req.params
-  const body = req.body
-  res.json({
-    message: 'updated name',
-    data: body,
-    id,
-  })
-});
-
-router.delete('/:id', (req, res) => {
-  const {id} = req.params
-  res.json({
-    message: 'delete',
-    id,
-  })
-});
-
-router.get('/:id', (req, res) => {
-  const {id} = req.params
-  if(id == '999') {
+router.patch('/:id', async (req, res) => {
+  try {
+    const {id} = req.params
+    const body = req.body
+    const newProducts = await service.update(id, body)
+    res.json(newProducts)
+  } catch(error) {
     res.status(404).json({
-      message: 'not found'
-    })
-  } else {
-    res.status(200).json({
-      id,
-      name: 'product 2',
-      price: 2000
+      message: error.message
     })
   }
+});
+
+router.delete('/:id', async (req, res) => {
+  const {id} = req.params
+  const newProducts = await service.delete(id)
+  res.json(newProducts)
+});
+
+router.get('/:id', async (req, res) => {
+  const {id} = req.params
+  const product = await service.findOne(id)
+  res.json(product)
 
 });
 
