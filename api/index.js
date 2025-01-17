@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors')
 const routerApi = require('./routes');
 const { logError, errorHandler, boomErrorHandler } = require('./middleware/errorHandler');
-const port = 3000;
+const port = process.env.PORT ||  3000;
 app.use(express.json())
 
 
@@ -18,11 +18,11 @@ const corsOptions = {
   }
 };
 app.use(cors(corsOptions))
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Hola server')
 });
 
-app.get('/nueva-ruta', (req, res) => {
+app.get('/api/nueva-ruta', (req, res) => {
   res.send('Hola soy una nueva ruta')
 });
 
